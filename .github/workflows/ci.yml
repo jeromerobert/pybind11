@@ -5,9 +5,8 @@ on:
   pull_request:
   push:
     branches:
-      - master
-      - stable
-      - v*
+      - debug
+      - mingw*
 
 jobs:
   mingw:
