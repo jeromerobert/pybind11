@@ -1,0 +1,3 @@
+#! /bin/sh
+docker run -u $(id -u):$(id -g) -i -v /etc/passwd:/etc/passwd \
+  -v $PWD:$PWD pybind11-debug

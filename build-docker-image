@@ -1,0 +1,1 @@
+docker build --network=container:redsocks-container_redsocks_1 -t pybind11-debug .
