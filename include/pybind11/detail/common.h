@@ -79,7 +79,9 @@
 #endif
 
 #if !defined(PYBIND11_EXPORT)
-#  if defined(WIN32) || defined(_WIN32)
+#  if __MINGW32__
+#    define PYBIND11_EXPORT __declspec(dllexport) __attribute__ ((visibility("default")))
+#  elif defined(WIN32) || defined(_WIN32)
 #    define PYBIND11_EXPORT __declspec(dllexport)
 #  else
 #    define PYBIND11_EXPORT __attribute__ ((visibility("default")))
