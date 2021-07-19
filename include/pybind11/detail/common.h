@@ -735,6 +735,12 @@ using expand_side_effects = bool[];
 
 PYBIND11_NAMESPACE_END(detail)
 
+#ifdef __MINGW32__
+#  pragma push_macro("PYBIND11_EXPORT")
+#  undef PYBIND11_EXPORT
+#  define PYBIND11_EXPORT
+#endif
+
 #if defined(_MSC_VER)
 #  pragma warning(push)
 #  pragma warning(disable: 4275) // warning C4275: An exported class was derived from a class that wasn't exported. Can be ignored when derived from a STL class.
@@ -766,6 +772,10 @@ PYBIND11_RUNTIME_EXCEPTION(buffer_error, PyExc_BufferError)
 PYBIND11_RUNTIME_EXCEPTION(import_error, PyExc_ImportError)
 PYBIND11_RUNTIME_EXCEPTION(cast_error, PyExc_RuntimeError) /// Thrown when pybind11::cast or handle::call fail due to a type casting error
 PYBIND11_RUNTIME_EXCEPTION(reference_cast_error, PyExc_RuntimeError) /// Used internally
+
+#ifdef __MINGW32__
+#  pragma pop_macro("PYBIND11_EXPORT")
+#endif
 
 [[noreturn]] PYBIND11_NOINLINE inline void pybind11_fail(const char *reason) { throw std::runtime_error(reason); }
 [[noreturn]] PYBIND11_NOINLINE inline void pybind11_fail(const std::string &reason) { throw std::runtime_error(reason); }
