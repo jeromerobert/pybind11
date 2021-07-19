@@ -319,6 +319,12 @@ PYBIND11_NAMESPACE_BEGIN(detail)
 inline std::string error_string();
 PYBIND11_NAMESPACE_END(detail)
 
+#ifdef __MINGW32__
+#  pragma push_macro("PYBIND11_EXPORT")
+#  undef PYBIND11_EXPORT
+#  define PYBIND11_EXPORT
+#endif
+
 #if defined(_MSC_VER)
 #  pragma warning(push)
 #  pragma warning(disable: 4275 4251) // warning C4275: An exported class was derived from a class that wasn't exported. Can be ignored when derived from a STL class.
@@ -378,6 +384,10 @@ private:
 };
 #if defined(_MSC_VER)
 #  pragma warning(pop)
+#endif
+
+#ifdef __MINGW32__
+#  pragma pop_macro("PYBIND11_EXPORT")
 #endif
 
 /** \defgroup python_builtins _
