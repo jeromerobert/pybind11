@@ -93,9 +93,9 @@
 #endif
 
 #if defined(PYBIND11_CPP14)
-#  define PYBIND11_DEPRECATED(reason)
+#  define PYBIND11_DEPRECATED(reason) [[deprecated(reason)]]
 #else
-#  define PYBIND11_DEPRECATED(reason)
+#  define PYBIND11_DEPRECATED(reason) __attribute__((deprecated(reason)))
 #endif
 
 #if defined(PYBIND11_CPP17)
