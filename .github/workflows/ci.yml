@@ -40,8 +40,5 @@ jobs:
     - name: Python tests
       run: cmake --build build --target pytest
 
-    - name: C++ tests
-      run: cmake --build build --target cpptest
-
     - name: Interface test
       run: cmake --build build --target test_cmake_build
