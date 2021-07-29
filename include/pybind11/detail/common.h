@@ -89,10 +89,14 @@
 #  endif
 #endif
 
-// With Mingw64, workaround for:
+#if !defined(PYBIND11_EXPORT_EXCEPTION)
+#  ifdef __MINGW32__
+// workaround for:
 // error: 'dllexport' implies default visibility, but xxx has already been declared with a different visibility
-#if !defined(PYBIND11_EXPORT_EXCEPTION) && !defined(__MINGW32__)
-#  define PYBIND11_EXPORT_EXCEPTION PYBIND11_EXPORT
+#    define PYBIND11_EXPORT_EXCEPTION
+#  else
+#    define PYBIND11_EXPORT_EXCEPTION PYBIND11_EXPORT
+#  endif
 #endif
 
 #if defined(_MSC_VER)
