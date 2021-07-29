@@ -89,6 +89,12 @@
 #  endif
 #endif
 
+// With Mingw64, workaround for:
+// error: 'dllexport' implies default visibility, but xxx has already been declared with a different visibility
+#if !defined(PYBIND11_EXPORT_EXCEPTION) && !defined(__MINGW32__)
+#  define PYBIND11_EXPORT_EXCEPTION PYBIND11_EXPORT
+#endif
+
 #if defined(_MSC_VER)
 #  define PYBIND11_NOINLINE __declspec(noinline)
 #else
@@ -735,18 +741,12 @@ using expand_side_effects = bool[];
 
 PYBIND11_NAMESPACE_END(detail)
 
-#ifdef __MINGW32__
-#  pragma push_macro("PYBIND11_EXPORT")
-#  undef PYBIND11_EXPORT
-#  define PYBIND11_EXPORT
-#endif
-
 #if defined(_MSC_VER)
 #  pragma warning(push)
 #  pragma warning(disable: 4275) // warning C4275: An exported class was derived from a class that wasn't exported. Can be ignored when derived from a STL class.
 #endif
 /// C++ bindings of builtin Python exceptions
-class PYBIND11_EXPORT builtin_exception : public std::runtime_error {
+class PYBIND11_EXPORT_EXCEPTION builtin_exception : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error;
     /// Set the error using the Python C API
@@ -757,7 +757,7 @@ public:
 #endif
 
 #define PYBIND11_RUNTIME_EXCEPTION(name, type) \
-    class PYBIND11_EXPORT name : public builtin_exception { public: \
+    class PYBIND11_EXPORT_EXCEPTION name : public builtin_exception { public: \
         using builtin_exception::builtin_exception; \
         name() : name("") { } \
         void set_error() const override { PyErr_SetString(type, what()); } \
@@ -772,10 +772,6 @@ PYBIND11_RUNTIME_EXCEPTION(buffer_error, PyExc_BufferError)
 PYBIND11_RUNTIME_EXCEPTION(import_error, PyExc_ImportError)
 PYBIND11_RUNTIME_EXCEPTION(cast_error, PyExc_RuntimeError) /// Thrown when pybind11::cast or handle::call fail due to a type casting error
 PYBIND11_RUNTIME_EXCEPTION(reference_cast_error, PyExc_RuntimeError) /// Used internally
-
-#ifdef __MINGW32__
-#  pragma pop_macro("PYBIND11_EXPORT")
-#endif
 
 [[noreturn]] PYBIND11_NOINLINE inline void pybind11_fail(const char *reason) { throw std::runtime_error(reason); }
 [[noreturn]] PYBIND11_NOINLINE inline void pybind11_fail(const std::string &reason) { throw std::runtime_error(reason); }

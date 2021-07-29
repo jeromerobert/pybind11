@@ -319,12 +319,6 @@ PYBIND11_NAMESPACE_BEGIN(detail)
 inline std::string error_string();
 PYBIND11_NAMESPACE_END(detail)
 
-#ifdef __MINGW32__
-#  pragma push_macro("PYBIND11_EXPORT")
-#  undef PYBIND11_EXPORT
-#  define PYBIND11_EXPORT
-#endif
-
 #if defined(_MSC_VER)
 #  pragma warning(push)
 #  pragma warning(disable: 4275 4251) // warning C4275: An exported class was derived from a class that wasn't exported. Can be ignored when derived from a STL class.
@@ -333,7 +327,7 @@ PYBIND11_NAMESPACE_END(detail)
 /// thrown to propagate python-side errors back through C++ which can either be caught manually or
 /// else falls back to the function dispatcher (which then raises the captured error back to
 /// python).
-class PYBIND11_EXPORT error_already_set : public std::runtime_error {
+class PYBIND11_EXPORT_EXCEPTION error_already_set : public std::runtime_error {
 public:
     /// Constructs a new exception from the current Python error indicator, if any.  The current
     /// Python error indicator will be cleared.
@@ -386,10 +380,6 @@ private:
 };
 #if defined(_MSC_VER)
 #  pragma warning(pop)
-#endif
-
-#ifdef __MINGW32__
-#  pragma pop_macro("PYBIND11_EXPORT")
 #endif
 
 /** \defgroup python_builtins _
